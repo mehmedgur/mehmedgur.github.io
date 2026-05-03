@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilardo Turnuvası 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --felt: #1a4a2e;
+  --felt-light: #225c39;
+  --gold: #c9a84c;
+  --bg: #0d0d0d;
+  --bg2: #141414;
+  --bg3: #1c1c1c;
+  --surface: #1f1f1f;
+  --border: rgba(201,168,76,0.2);
+  --text: #f0ebe0;
+  --text-muted: #7a7060;
+  --text-dim: #4a453c;
+  --radius: 12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(26,74,46,0.25) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 80% 80%,rgba(201,168,76,0.06) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.container{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+
+header{padding:52px 0 40px;text-align:center;}
+.header-ornament{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px;opacity:0;animation:fadeUp .8s ease forwards;}
+.ornament-line{height:1px;width:70px;background:linear-gradient(to right,transparent,var(--gold));}
+.ornament-line.right{background:linear-gradient(to left,transparent,var(--gold));}
+.ornament-diamond{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);}
+.header-eyebrow{font-size:10px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--gold);opacity:0;animation:fadeUp .8s .1s ease forwards;}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,7vw,68px);font-weight:600;line-height:1;letter-spacing:-1px;color:var(--text);margin:10px 0 6px;opacity:0;animation:fadeUp .8s .2s ease forwards;}
+h1 span{color:var(--gold);}
+.header-sub{font-size:13px;color:var(--text-muted);opacity:0;animation:fadeUp .8s .3s ease forwards;}
+.stats-row{display:flex;justify-content:center;margin-top:28px;border:.5px solid var(--border);border-radius:var(--radius);overflow:hidden;opacity:0;animation:fadeUp .8s .4s ease forwards;}
+.stat{flex:1;padding:14px 16px;text-align:center;border-right:.5px solid var(--border);background:var(--surface);max-width:150px;}
+.stat:last-child{border-right:none;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--gold);line-height:1;}
+.stat-label{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px;margin-top:3px;}
+
+.tabs{display:flex;justify-content:center;gap:4px;margin:40px 0 32px;background:var(--surface);border:.5px solid var(--border);border-radius:100px;padding:4px;width:fit-content;margin-left:auto;margin-right:auto;opacity:0;animation:fadeUp .8s .5s ease forwards;}
+.tab-btn{background:transparent;border:none;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;padding:8px 18px;border-radius:100px;cursor:pointer;transition:all .25s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{background:var(--gold);color:#0d0d0d;font-weight:500;}
+.pane{display:none;}
+.pane.active{display:block;}
+
+.section-label{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.section-label-text{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;}
+.section-label-line{flex:1;height:.5px;background:var(--border);}
+
+.group-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;}
+.group-card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius);overflow:hidden;opacity:0;animation:fadeUp .5s ease forwards;}
+.group-card-head{background:linear-gradient(135deg,var(--felt) 0%,var(--felt-light) 100%);padding:13px 18px;display:flex;align-items:center;justify-content:space-between;}
+.group-id{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:700;color:var(--gold);}
+.group-badge{font-size:9px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,235,224,0.55);}
+
+.standings-table{width:100%;border-collapse:collapse;}
+.standings-table th{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);font-weight:500;padding:8px 18px 6px;text-align:left;border-bottom:.5px solid rgba(201,168,76,0.08);}
+.standings-table th:not(:first-child){text-align:center;}
+.standings-table td{padding:7px 18px;font-size:13px;border-bottom:.5px solid rgba(255,255,255,0.03);}
+.standings-table td:not(:first-child){text-align:center;color:var(--text-muted);font-size:12px;}
+.standings-table tr:last-child td{border-bottom:none;}
+.standings-table tr.rank-1 td,.standings-table tr.rank-2 td{background:rgba(201,168,76,0.04);}
+.standings-table tr.rank-1 .rank-badge{background:var(--gold);color:#0d0d0d;}
+.standings-table tr.rank-2 .rank-badge{background:rgba(201,168,76,0.2);color:var(--gold);}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--bg3);border:.5px solid var(--border);font-size:9px;color:var(--text-dim);font-weight:500;}
+.sets-won{color:var(--text) !important;font-weight:500;}
+.finalist-tag{font-size:9px;background:rgba(201,168,76,0.12);border:.5px solid rgba(201,168,76,0.25);color:var(--gold);padding:2px 5px;border-radius:4px;margin-left:5px;}
+
+.matches-area{border-top:.5px solid rgba(201,168,76,0.1);padding:12px 18px 14px;background:rgba(0,0,0,0.18);}
+.matches-title{font-size:9px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+.match-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:.5px solid rgba(255,255,255,0.03);}
+.match-row:last-child{border-bottom:none;}
+.match-num-badge{font-size:9px;font-weight:500;color:var(--gold);background:rgba(201,168,76,0.1);border:.5px solid rgba(201,168,76,0.2);border-radius:4px;padding:2px 5px;min-width:24px;text-align:center;flex-shrink:0;}
+.match-player-name{font-size:12px;color:rgba(240,235,224,0.7);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.match-player-name.winner{color:var(--gold);font-weight:500;}
+.set-input{width:36px;height:28px;background:var(--bg3);border:.5px solid rgba(201,168,76,0.15);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;text-align:center;outline:none;transition:border-color .2s,background .2s;-moz-appearance:textfield;}
+.set-input::-webkit-inner-spin-button,.set-input::-webkit-outer-spin-button{-webkit-appearance:none;}
+.set-input:focus{border-color:var(--gold);background:rgba(201,168,76,0.06);}
+.set-input.filled{border-color:rgba(201,168,76,0.3);}
+.match-vs-sep{font-size:10px;color:var(--text-dim);flex-shrink:0;}
+
+/* GRUP FİNALİ — sadece tüm maçlar tamamlanınca görünür */
+.grup-finali-section{border-top:.5px solid rgba(201,168,76,0.3);padding:14px 18px 16px;background:rgba(201,168,76,0.04);}
+.gf-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.gf-crown{font-size:14px;}
+.gf-title{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);font-weight:500;}
+.gf-subtitle{font-size:11px;color:var(--text-muted);margin-left:auto;}
+.gf-players-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:12px;}
+.gf-player-box{padding:8px 10px;background:var(--bg3);border:.5px solid rgba(201,168,76,0.2);border-radius:8px;text-align:center;}
+.gf-player-box .gf-rank{font-size:9px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.gf-player-box .gf-name{font-size:13px;color:var(--text);}
+.gf-player-box .gf-sets-info{font-size:10px;color:var(--text-muted);margin-top:2px;}
+.gf-vs{font-size:12px;color:var(--text-dim);text-align:center;}
+.gf-score-row{display:flex;align-items:center;gap:8px;}
+.gf-score-name{flex:1;font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gf-score-name.winner-name{color:var(--gold);font-weight:500;}
+.gf-winner-banner{margin-top:10px;text-align:center;padding:9px 14px;background:rgba(201,168,76,0.1);border:.5px solid rgba(201,168,76,0.35);border-radius:8px;}
+.gw-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+.gw-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--gold);}
+.gw-sub{font-size:10px;color:var(--text-muted);margin-top:2px;}
+
+/* BRACKET */
+.bracket-wrap{overflow-x:auto;padding-bottom:16px;}
+.bracket{display:flex;gap:0;min-width:860px;align-items:stretch;}
+.round-col{flex:1;display:flex;flex-direction:column;padding:0 8px;}
+.round-head{text-align:center;padding:10px 0 20px;font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--gold);}
+.round-matches{display:flex;flex-direction:column;justify-content:space-around;flex:1;gap:10px;}
+.bracket-match{background:var(--surface);border:.5px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .2s;}
+.bracket-match:hover{border-color:rgba(201,168,76,0.5);}
+.bracket-slot{padding:9px 12px;font-size:12px;color:var(--text-muted);border-bottom:.5px solid rgba(201,168,76,0.1);display:flex;align-items:center;gap:8px;}
+.bracket-slot:last-child{border-bottom:none;}
+.bracket-slot.tbd{font-style:italic;color:var(--text-dim);}
+.bracket-slot.known{color:var(--text);}
+.slot-seed{font-size:9px;color:var(--gold);background:rgba(201,168,76,0.1);border-radius:3px;padding:1px 4px;flex-shrink:0;}
+.champion-card{margin-top:28px;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.05));border:.5px solid rgba(201,168,76,0.4);border-radius:var(--radius);padding:24px;text-align:center;}
+.champion-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.champion-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--text);}
+.trophy{font-size:28px;margin-bottom:8px;}
+
+/* SCHEDULE */
+.schedule-day{margin-bottom:24px;opacity:0;animation:fadeUp .5s ease forwards;}
+.day-header{display:flex;align-items:center;gap:14px;margin-bottom:10px;}
+.day-badge{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--gold);line-height:1;min-width:26px;}
+.day-title{font-size:14px;font-weight:500;color:var(--text);}
+.day-meta{font-size:12px;color:var(--text-muted);margin-top:1px;}
+.schedule-matches{display:flex;flex-direction:column;gap:5px;}
+.sched-match{display:flex;align-items:center;gap:12px;padding:11px 16px;background:var(--surface);border:.5px solid var(--border);border-radius:8px;transition:border-color .2s,transform .2s;}
+.sched-match:hover{border-color:rgba(201,168,76,0.4);transform:translateX(3px);}
+.sched-num{font-size:10px;color:var(--gold);background:rgba(201,168,76,0.08);border:.5px solid rgba(201,168,76,0.2);border-radius:5px;padding:3px 7px;font-weight:500;min-width:30px;text-align:center;flex-shrink:0;}
+.sched-group{font-size:10px;letter-spacing:1px;color:var(--text-dim);min-width:65px;font-weight:500;}
+.sched-players{flex:1;display:flex;align-items:center;gap:10px;font-size:13px;}
+.sched-players span{color:var(--text);}
+.sched-players em{color:var(--text-dim);font-style:normal;font-size:11px;}
+.sched-format{font-size:10px;color:var(--text-dim);background:var(--bg3);padding:3px 7px;border-radius:5px;white-space:nowrap;}
+.sched-match.gf-match{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.04);}
+.sched-match.semi-match{border-color:rgba(201,168,76,0.2);}
+.sched-match.final-match{border-color:rgba(201,168,76,0.45);background:rgba(201,168,76,0.07);}
+
+footer{margin-top:56px;padding:22px 0;border-top:.5px solid var(--border);text-align:center;}
+.footer-text{font-size:11px;color:var(--text-dim);letter-spacing:.5px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.group-card:nth-child(1){animation-delay:.05s;}.group-card:nth-child(2){animation-delay:.1s;}.group-card:nth-child(3){animation-delay:.15s;}.group-card:nth-child(4){animation-delay:.2s;}.group-card:nth-child(5){animation-delay:.25s;}.group-card:nth-child(6){animation-delay:.3s;}
+.schedule-day:nth-child(1){animation-delay:.05s;}.schedule-day:nth-child(2){animation-delay:.12s;}.schedule-day:nth-child(3){animation-delay:.19s;}.schedule-day:nth-child(4){animation-delay:.26s;}.schedule-day:nth-child(5){animation-delay:.33s;}
+::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.3);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-ornament">
+      <div class="ornament-line"></div><div class="ornament-diamond"></div><div class="ornament-line right"></div>
+    </div>
+    <div class="header-eyebrow">Şampiyona · 2026</div>
+    <h1>Bilardo <span>Turnuvası</span></h1>
+    <p class="header-sub">24 Oyuncu &nbsp;·&nbsp; 6 Grup × 4 Kişi &nbsp;·&nbsp; Grup Finali Sistemi</p>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">24</div><div class="stat-label">Oyuncu</div></div>
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Grup</div></div>
+      <div class="stat"><div class="stat-num">36</div><div class="stat-label">Grup Maçı</div></div>
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Grup Finali</div></div>
+      <div class="stat"><div class="stat-num">2+</div><div class="stat-label">Eleme Turu</div></div>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('groups')">Gruplar & Sonuçlar</button>
+    <button class="tab-btn" onclick="showTab('bracket')">Eleme Braketi</button>
+    <button class="tab-btn" onclick="showTab('schedule')">Program</button>
+  </div>
+
+  <div id="pane-groups" class="pane active">
+    <div class="section-label">
+      <span class="section-label-text">Grup Maçları</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">Tüm skorlar girilince en iyi 2 Grup Finali'ne otomatik çıkar</span>
+    </div>
+    <div class="group-grid" id="groupGrid"></div>
+  </div>
+
+  <div id="pane-bracket" class="pane">
+    <div class="section-label">
+      <span class="section-label-text">Eleme Turu</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">Grup Finali kazananları · Çeyrek → Yarı → Final</span>
+    </div>
+    <div class="bracket-wrap"><div class="bracket" id="bracketEl"></div></div>
+    <div class="champion-card">
+      <div class="trophy">🏆</div>
+      <div class="champion-label">Şampiyon</div>
+      <div class="champion-name">Final Bekleniyor</div>
+    </div>
+  </div>
+
+  <div id="pane-schedule" class="pane">
+    <div class="section-label">
+      <span class="section-label-text">Turnuva Programı</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">2 masa eş zamanlı</span>
+    </div>
+    <div id="scheduleEl"></div>
+  </div>
+
+  <footer>
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;">
+      <div style="height:.5px;width:60px;background:linear-gradient(to right,transparent,var(--gold))"></div>
+      <div style="width:5px;height:5px;background:var(--gold);transform:rotate(45deg)"></div>
+      <div style="height:.5px;width:60px;background:linear-gradient(to left,transparent,var(--gold))"></div>
+    </div>
+    <p class="footer-text">Bilardo Turnuvası 2026 &nbsp;·&nbsp; İyi oyunlar!</p>
+  </footer>
+</div>
+
+<script>
+const groups = [
+  { id:'A', players:['Mehmed Gürbüz','Özgür Furuncuoğlu','Kenan Poçulu','Kağan Ergün Çetin'] },
+  { id:'B', players:['Toprak Yıldırım','Emir Dizman','Batuhan Ünsal','İsmayıl Hüseynzade'] },
+  { id:'C', players:['Umut Kağan İşler','Duhan Kaan Şenol','Burak Efe Özcan','Emre Mete Eröz'] },
+  { id:'D', players:['Mehmet Ayberk Yağız','Batuhan','Muhammed Ali YAŞAR','Başar CEYLAN'] },
+  { id:'E', players:['Arif Bağtır','Ali Efe Yağmur','Önder Kaya','İsmail Üstünol'] },
+  { id:'F', players:['Emir Ege GENÇ','Emir Altunbulak','Telat Can Poyraz','Çağatay Ulukurd'] },
+];
+
+const scores = {};     // scores[gid][matchIdx] = {s1,s2}
+const gfScores = {};   // gfScores[gid] = {s1,s2}
+
+groups.forEach(g => {
+  scores[g.id] = {};
+  gfScores[g.id] = { s1:'', s2:'' };
+});
+
+function getPairs(players) {
+  const m = [];
+  for(let i=0;i<players.length;i++)
+    for(let j=i+1;j<players.length;j++)
+      m.push([i,j]);
+  return m;
+}
+
+function short(name) {
+  const p = name.trim().split(' ');
+  return p.length===1 ? name : p[0]+' '+p[p.length-1][0]+'.';
+}
+
+function calcStandings(gid) {
+  const g = groups.find(x=>x.id===gid);
+  const pairs = getPairs(g.players);
+  const stats = g.players.map((p,i)=>({name:p,idx:i,sets:0,played:0}));
+  pairs.forEach(([a,b],mi)=>{
+    const sc = scores[gid][mi];
+    if(!sc||sc.s1===''||sc.s2==='') return;
+    const s1=parseInt(sc.s1), s2=parseInt(sc.s2);
+    if(isNaN(s1)||isNaN(s2)) return;
+    stats[a].sets+=s1; stats[b].sets+=s2;
+    stats[a].played++; stats[b].played++;
+  });
+  stats.sort((a,b)=>b.sets-a.sets||a.name.localeCompare(b.name));
+  return stats;
+}
+
+function allDone(gid) {
+  const g = groups.find(x=>x.id===gid);
+  const pairs = getPairs(g.players);
+  return pairs.every((_,mi)=>{
+    const sc=scores[gid][mi];
+    return sc&&sc.s1!==''&&sc.s2!==''&&!isNaN(parseInt(sc.s1))&&!isNaN(parseInt(sc.s2));
+  });
+}
+
+function getTop2(gid) {
+  if(!allDone(gid)) return null;
+  const st = calcStandings(gid);
+  return [st[0], st[1]];
+}
+
+function getGFWinner(gid) {
+  const top2 = getTop2(gid);
+  if(!top2) return null;
+  const ps = gfScores[gid];
+  const s1=parseInt(ps.s1), s2=parseInt(ps.s2);
+  if(isNaN(s1)||isNaN(s2)||ps.s1===''||ps.s2==='') return null;
+  if(s1>s2) return top2[0].name;
+  if(s2>s1) return top2[1].name;
+  return null;
+}
+
+function renderStandings(gid) {
+  const st = calcStandings(gid);
+  const done = allDone(gid);
+  document.getElementById('standings-'+gid).innerHTML = st.map((s,i)=>`
+    <tr class="rank-${i+1}">
+      <td><span class="rank-badge">${i+1}</span></td>
+      <td>${short(s.name)}${done&&i<2?'<span class="finalist-tag">FİNAL</span>':''}</td>
+      <td>${s.played}</td>
+      <td class="sets-won">${s.sets}</td>
+    </tr>`).join('');
+}
+
+function renderMatches(gid) {
+  const g = groups.find(x=>x.id===gid);
+  const pairs = getPairs(g.players);
+  document.getElementById('matches-'+gid).innerHTML = pairs.map(([a,b],mi)=>{
+    const sc=scores[gid][mi]||{s1:'',s2:''};
+    const s1v=sc.s1!==''?parseInt(sc.s1):null;
+    const s2v=sc.s2!==''?parseInt(sc.s2):null;
+    const p1w=s1v!==null&&s2v!==null&&s1v>s2v;
+    const p2w=s1v!==null&&s2v!==null&&s2v>s1v;
+    return `
+    <div class="match-row">
+      <span class="match-num-badge">M${mi+1}</span>
+      <span class="match-player-name${p1w?' winner':''}">${short(g.players[a])}</span>
+      <input type="number" min="0" max="9" class="set-input${sc.s1!==''?' filled':''}" value="${sc.s1}" placeholder="0"
+        oninput="setScore('${gid}',${mi},0,this.value)">
+      <span class="match-vs-sep">—</span>
+      <input type="number" min="0" max="9" class="set-input${sc.s2!==''?' filled':''}" value="${sc.s2}" placeholder="0"
+        oninput="setScore('${gid}',${mi},1,this.value)">
+      <span class="match-player-name${p2w?' winner':''}" style="text-align:right">${short(g.players[b])}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderGrupFinali(gid) {
+  const section = document.getElementById('gf-'+gid);
+  const top2 = getTop2(gid);
+
+  // Grup maçları bitmedi → gizle
+  if(!top2) { section.style.display='none'; return; }
+  section.style.display='block';
+
+  const ps = gfScores[gid];
+  const s1v=ps.s1!==''?parseInt(ps.s1):null;
+  const s2v=ps.s2!==''?parseInt(ps.s2):null;
+  const p1w=s1v!==null&&s2v!==null&&s1v>s2v;
+  const p2w=s1v!==null&&s2v!==null&&s2v>s1v;
+  const winner=getGFWinner(gid);
+  const st=calcStandings(gid);
+
+  section.innerHTML=`
+    <div class="gf-header">
+      <span class="gf-crown">🏅</span>
+      <span class="gf-title">Grup Finali</span>
+      <span class="gf-subtitle">Kazanan üst tura çıkar</span>
+    </div>
+    <div class="gf-players-row">
+      <div class="gf-player-box">
+        <div class="gf-rank">1. Sıra</div>
+        <div class="gf-name">${short(top2[0].name)}</div>
+        <div class="gf-sets-info">${top2[0].sets} set kazandı</div>
+      </div>
+      <span class="gf-vs">vs</span>
+      <div class="gf-player-box">
+        <div class="gf-rank">2. Sıra</div>
+        <div class="gf-name">${short(top2[1].name)}</div>
+        <div class="gf-sets-info">${top2[1].sets} set kazandı</div>
+      </div>
+    </div>
+    <div class="gf-score-row">
+      <span class="gf-score-name${p1w?' winner-name':''}">${short(top2[0].name)}</span>
+      <input type="number" min="0" max="9" class="set-input${ps.s1!==''?' filled':''}" value="${ps.s1}" placeholder="0"
+        oninput="setGFScore('${gid}',0,this.value)">
+      <span class="match-vs-sep">—</span>
+      <input type="number" min="0" max="9" class="set-input${ps.s2!==''?' filled':''}" value="${ps.s2}" placeholder="0"
+        oninput="setGFScore('${gid}',1,this.value)">
+      <span class="gf-score-name${p2w?' winner-name':''}" style="text-align:right">${short(top2[1].name)}</span>
+    </div>
+    ${winner?`
+    <div class="gf-winner-banner">
+      <div class="gw-label">Grup Finali Kazananı</div>
+      <div class="gw-name">🎯 ${winner}</div>
+      <div class="gw-sub">Üst tura çıktı</div>
+    </div>`:''}`;
+}
+
+function setScore(gid, mi, slot, val) {
+  if(!scores[gid][mi]) scores[gid][mi]={s1:'',s2:''};
+  slot===0 ? scores[gid][mi].s1=val : scores[gid][mi].s2=val;
+  renderStandings(gid);
+  renderMatches(gid);
+  renderGrupFinali(gid);
+  updateBracket();
+}
+
+function setGFScore(gid, slot, val) {
+  slot===0 ? gfScores[gid].s1=val : gfScores[gid].s2=val;
+  renderGrupFinali(gid);
+  updateBracket();
+}
+
+function buildGroups() {
+  const grid = document.getElementById('groupGrid');
+  groups.forEach(g=>{
+    const card=document.createElement('div');
+    card.className='group-card';
+    card.innerHTML=`
+      <div class="group-card-head">
+        <div class="group-id">GRUP ${g.id}</div>
+        <div class="group-badge">4 oyuncu · 6 maç · toplam set</div>
+      </div>
+      <div class="group-card-body">
+        <table class="standings-table">
+          <thead><tr>
+            <th style="width:28px"></th><th>Oyuncu</th>
+            <th title="Oynanan">O</th><th title="Kazanılan Set">Set</th>
+          </tr></thead>
+          <tbody id="standings-${g.id}"></tbody>
+        </table>
+        <div class="matches-area">
+          <div class="matches-title">Fikstür · Skor Girişi</div>
+          <div id="matches-${g.id}"></div>
+        </div>
+        <div class="grup-finali-section" id="gf-${g.id}" style="display:none"></div>
+      </div>`;
+    grid.appendChild(card);
+    renderStandings(g.id);
+    renderMatches(g.id);
+  });
+}
+
+function updateBracket() {
+  const el=document.getElementById('bracketEl');
+  el.innerHTML='';
+  const winners=groups.map(g=>getGFWinner(g.id));
+  const rounds=[
+    {
+      title:'Çeyrek Final',sub:'3 Set',
+      matches:[
+        [winners[0]||'Grup A Fin. K.', winners[1]||'Grup B Fin. K.'],
+        [winners[2]||'Grup C Fin. K.', winners[3]||'Grup D Fin. K.'],
+        [winners[4]||'Grup E Fin. K.', winners[5]||'Grup F Fin. K.'],
+      ],
+      known:winners
+    },
+    {title:'Yarı Final',sub:'5 Set',matches:[['ÇF M1 Kazananı','ÇF M2 Kazananı'],['ÇF M3 Kazananı','—']]},
+    {title:'Final',sub:'5 Set',matches:[['YF M1 Kazananı','YF M2 Kazananı']]}
+  ];
+  rounds.forEach((r,ri)=>{
+    const col=document.createElement('div');
+    col.className='round-col';
+    col.innerHTML=`<div class="round-head">${r.title}<br><span style="color:var(--text-dim);font-size:8px;letter-spacing:1px">${r.sub}</span></div>`;
+    const md=document.createElement('div');
+    md.className='round-matches';
+    r.matches.forEach((m,mi)=>{
+      const p1k=ri===0&&!!r.known[mi*2];
+      const p2k=ri===0&&!!r.known[mi*2+1];
+      const b=document.createElement('div');
+      b.className='bracket-match';
+      b.innerHTML=`
+        <div class="bracket-slot${p1k?' known':' tbd'}"><span class="slot-seed">${String.fromCharCode(65+mi*2)}</span>${m[0]}</div>
+        <div class="bracket-slot${p2k?' known':' tbd'}"><span class="slot-seed">${String.fromCharCode(65+mi*2+1)}</span>${m[1]}</div>`;
+      md.appendChild(b);
+    });
+    col.appendChild(md);
+    el.appendChild(col);
+  });
+}
+
+function buildSchedule() {
+  const el=document.getElementById('scheduleEl');
+  let mn=1;
+  const days=[
+    {num:1,title:'Grup A ve B Maçları',meta:'Grup aşaması · 1. gün · 12 maç',items:[
+      ...getPairs(groups[0].players).map(([a,b])=>({grp:'Grup A',p1:groups[0].players[a],p2:groups[0].players[b],fmt:'3 Set'})),
+      ...getPairs(groups[1].players).map(([a,b])=>({grp:'Grup B',p1:groups[1].players[a],p2:groups[1].players[b],fmt:'3 Set'})),
+    ]},
+    {num:2,title:'Grup C ve D Maçları',meta:'Grup aşaması · 2. gün · 12 maç',items:[
+      ...getPairs(groups[2].players).map(([a,b])=>({grp:'Grup C',p1:groups[2].players[a],p2:groups[2].players[b],fmt:'3 Set'})),
+      ...getPairs(groups[3].players).map(([a,b])=>({grp:'Grup D',p1:groups[3].players[a],p2:groups[3].players[b],fmt:'3 Set'})),
+    ]},
+    {num:3,title:'Grup E ve F Maçları',meta:'Grup aşaması · 3. gün · 12 maç',items:[
+      ...getPairs(groups[4].players).map(([a,b])=>({grp:'Grup E',p1:groups[4].players[a],p2:groups[4].players[b],fmt:'3 Set'})),
+      ...getPairs(groups[5].players).map(([a,b])=>({grp:'Grup F',p1:groups[5].players[a],p2:groups[5].players[b],fmt:'3 Set'})),
+    ]},
+    {num:4,title:'Grup Finalleri + Çeyrek Final',meta:'Her gruptan en iyi 2 · Grup Finali · Çeyrek Final',items:[
+      {grp:'G.FİN.A',p1:'Grup A 1.',p2:'Grup A 2.',fmt:'3 Set',cls:'gf-match'},
+      {grp:'G.FİN.B',p1:'Grup B 1.',p2:'Grup B 2.',fmt:'3 Set',cls:'gf-match'},
+      {grp:'G.FİN.C',p1:'Grup C 1.',p2:'Grup C 2.',fmt:'3 Set',cls:'gf-match'},
+      {grp:'G.FİN.D',p1:'Grup D 1.',p2:'Grup D 2.',fmt:'3 Set',cls:'gf-match'},
+      {grp:'G.FİN.E',p1:'Grup E 1.',p2:'Grup E 2.',fmt:'3 Set',cls:'gf-match'},
+      {grp:'G.FİN.F',p1:'Grup F 1.',p2:'Grup F 2.',fmt:'3 Set',cls:'gf-match'},
+      {grp:'ÇEY.F.',p1:'GF-A K.',p2:'GF-B K.',fmt:'3 Set',cls:'semi-match'},
+      {grp:'ÇEY.F.',p1:'GF-C K.',p2:'GF-D K.',fmt:'3 Set',cls:'semi-match'},
+      {grp:'ÇEY.F.',p1:'GF-E K.',p2:'GF-F K.',fmt:'3 Set',cls:'semi-match'},
+    ]},
+    {num:5,title:'Yarı Final ve Final',meta:'Şampiyonluk günü · Ödül töreni',items:[
+      {grp:'YARI F.',p1:'ÇF M1 K.',p2:'ÇF M2 K.',fmt:'5 Set',cls:'semi-match'},
+      {grp:'YARI F.',p1:'ÇF M3 K.',p2:'—',fmt:'5 Set',cls:'semi-match'},
+      {grp:'FİNAL',p1:'YF M1 K.',p2:'YF M2 K.',fmt:'5 Set',cls:'final-match'},
+    ]}
+  ];
+  days.forEach(day=>{
+    const div=document.createElement('div');
+    div.className='schedule-day';
+    div.innerHTML=`
+      <div class="day-header">
+        <div class="day-badge">${day.num}</div>
+        <div class="day-info"><div class="day-title">${day.title}</div><div class="day-meta">${day.meta}</div></div>
+      </div>
+      <div class="schedule-matches">
+        ${day.items.map(item=>`
+        <div class="sched-match${item.cls?' '+item.cls:''}">
+          <span class="sched-num">#${mn++}</span>
+          <span class="sched-group">${item.grp}</span>
+          <div class="sched-players"><span>${item.p1}</span><em>vs</em><span>${item.p2}</span></div>
+          <span class="sched-format">${item.fmt}</span>
+        </div>`).join('')}
+      </div>`;
+    el.appendChild(div);
+  });
+}
+
+function showTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['groups','bracket','schedule'][i]===name));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane-'+name).classList.add('active');
+}
+
+buildGroups();
+buildSchedule();
+updateBracket();
+</script>
+</body>
+</html>
