@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilardo Turnuvası 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --felt: #1a4a2e;
+  --felt-light: #225c39;
+  --gold: #c9a84c;
+  --gold-light: #e2c47a;
+  --bg: #0d0d0d;
+  --bg2: #141414;
+  --bg3: #1c1c1c;
+  --surface: #1f1f1f;
+  --border: rgba(201,168,76,0.2);
+  --text: #f0ebe0;
+  --text-muted: #7a7060;
+  --text-dim: #4a453c;
+  --green-accent: #2a6b42;
+  --radius: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(26,74,46,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(201,168,76,0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+/* ── HEADER ── */
+header {
+  padding: 60px 0 48px;
+  text-align: center;
+  position: relative;
+}
+
+.header-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.ornament-line {
+  height: 1px;
+  width: 80px;
+  background: linear-gradient(to right, transparent, var(--gold));
+}
+.ornament-line.right { background: linear-gradient(to left, transparent, var(--gold)); }
+
+.ornament-diamond {
+  width: 8px; height: 8px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+.header-eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0;
+  animation: fadeUp 0.8s 0.1s ease forwards;
+}
+
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(42px, 8vw, 72px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -1px;
+  color: var(--text);
+  margin: 12px 0 8px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s ease forwards;
+}
+
+h1 span { color: var(--gold); }
+
+.header-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.3s ease forwards;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-top: 36px;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s ease forwards;
+}
+
+.stat {
+  flex: 1;
+  padding: 16px 20px;
+  text-align: center;
+  border-right: 0.5px solid var(--border);
+  background: var(--surface);
+  max-width: 160px;
+}
+.stat:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--gold);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 4px;
+}
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: 48px 0 36px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 100px;
+  padding: 4px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.5s ease forwards;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 8px 20px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active {
+  background: var(--gold);
+  color: #0d0d0d;
+  font-weight: 500;
+}
+
+/* ── SECTION TITLES ── */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.section-label-text {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.section-label-line {
+  flex: 1;
+  height: 0.5px;
+  background: var(--border);
+}
+
+/* ── PANES ── */
+.pane { display: none; }
+.pane.active { display: block; }
+
+/* ── GROUP GRID ── */
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.group-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+}
+.group-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(201,168,76,0.45);
+}
+
+.group-card-head {
+  background: linear-gradient(135deg, var(--felt) 0%, var(--felt-light) 100%);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.group-card-head.duo {
+  background: linear-gradient(135deg, #1a3a2a 0%, #224432 100%);
+}
+
+.group-id {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.group-badge {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(240,235,224,0.6);
+}
+
+.group-card-body { padding: 0; }
+
+.player-list { padding: 12px 0 8px; }
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 18px;
+  transition: background 0.15s;
+}
+.player-item:hover { background: rgba(255,255,255,0.03); }
+.player-idx {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  color: var(--gold);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.player-name {
+  font-size: 13.5px;
+  color: var(--text);
+  font-weight: 400;
+}
+
+.matches-area {
+  border-top: 0.5px solid rgba(201,168,76,0.1);
+  padding: 10px 18px 14px;
+  background: rgba(0,0,0,0.15);
+}
+.matches-title {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.match-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 0.5px solid rgba(255,255,255,0.04);
+}
+.match-item:last-child { border-bottom: none; }
+.match-num {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  border: 0.5px solid rgba(201,168,76,0.2);
+  border-radius: 4px;
+  padding: 2px 5px;
+  min-width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.match-players {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.match-players strong { color: rgba(240,235,224,0.8); font-weight: 400; }
+.match-vs {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* ── BRACKET ── */
+.bracket-wrap {
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+.bracket {
+  display: flex;
+  gap: 0;
+  min-width: 820px;
+  align-items: stretch;
+}
+.round-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+}
+.round-head {
+  text-align: center;
+  padding: 10px 0 20px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.round-matches {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex: 1;
+  gap: 10px;
+}
+.bracket-match {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.bracket-match:hover { border-color: rgba(201,168,76,0.5); }
+.bracket-slot {
+  padding: 9px 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-bottom: 0.5px solid rgba(201,168,76,0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bracket-slot:last-child { border-bottom: none; }
+.bracket-slot.tbd { font-style: italic; color: var(--text-dim); }
+.slot-seed {
+  font-size: 9px;
+  color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  border-radius: 3px;
+  padding: 1px 4px;
+  flex-shrink: 0;
+}
+
+.champion-card {
+  margin-top: 32px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.05));
+  border: 0.5px solid rgba(201,168,76,0.4);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+}
+.champion-label {
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.champion-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+}
+.trophy { font-size: 28px; margin-bottom: 8px; }
+
+/* ── SCHEDULE ── */
+.schedule-day {
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+}
+.day-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.day-badge {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  min-width: 28px;
+}
+.day-info {}
+.day-title { font-size: 14px; font-weight: 500; color: var(--text); }
+.day-meta { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+.schedule-matches { display: flex; flex-direction: column; gap: 6px; }
+.sched-match {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.sched-match:hover {
+  border-color: rgba(201,168,76,0.4);
+  transform: translateX(3px);
+}
+.sched-num {
+  font-size: 10px;
+  color: var(--gold);
+  background: rgba(201,168,76,0.08);
+  border: 0.5px solid rgba(201,168,76,0.2);
+  border-radius: 5px;
+  padding: 3px 7px;
+  font-weight: 500;
+  min-width: 30px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.sched-group {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  min-width: 50px;
+  font-weight: 500;
+}
+.sched-players {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.sched-players span { color: var(--text); }
+.sched-players em { color: var(--text-dim); font-style: normal; font-size: 11px; }
+.sched-format {
+  font-size: 10px;
+  color: var(--text-dim);
+  background: var(--bg3);
+  padding: 3px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.sched-match.final-match { border-color: rgba(201,168,76,0.35); background: rgba(201,168,76,0.04); }
+.sched-match.semi-match { border-color: rgba(201,168,76,0.2); }
+
+/* ── FOOTER ── */
+footer {
+  margin-top: 64px;
+  padding: 24px 0;
+  border-top: 0.5px solid var(--border);
+  text-align: center;
+}
+.footer-ornament { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 12px; }
+.footer-text { font-size: 11px; color: var(--text-dim); letter-spacing: 0.5px; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.group-card:nth-child(1) { animation-delay: 0.05s; }
+.group-card:nth-child(2) { animation-delay: 0.10s; }
+.group-card:nth-child(3) { animation-delay: 0.15s; }
+.group-card:nth-child(4) { animation-delay: 0.20s; }
+.group-card:nth-child(5) { animation-delay: 0.25s; }
+.group-card:nth-child(6) { animation-delay: 0.30s; }
+.group-card:nth-child(7) { animation-delay: 0.35s; }
+.group-card:nth-child(8) { animation-delay: 0.40s; }
+
+.schedule-day:nth-child(1) { animation-delay: 0.05s; }
+.schedule-day:nth-child(2) { animation-delay: 0.15s; }
+.schedule-day:nth-child(3) { animation-delay: 0.25s; }
+.schedule-day:nth-child(4) { animation-delay: 0.35s; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="header-ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond"></div>
+      <div class="ornament-line right"></div>
+    </div>
+    <div class="header-eyebrow">Şampiyona · 2026</div>
+    <h1>Bilardo <span>Turnuvası</span></h1>
+    <p class="header-sub">23 Oyuncu &nbsp;·&nbsp; 8 Grup &nbsp;·&nbsp; Eleme Turu &nbsp;·&nbsp; 4 Gün</p>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">23</div><div class="stat-label">Oyuncu</div></div>
+      <div class="stat"><div class="stat-num">8</div><div class="stat-label">Grup</div></div>
+      <div class="stat"><div class="stat-num">29</div><div class="stat-label">Toplam Maç</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Gün</div></div>
+      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Masa</div></div>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('groups')">Gruplar</button>
+    <button class="tab-btn" onclick="showTab('bracket')">Eleme Braketi</button>
+    <button class="tab-btn" onclick="showTab('schedule')">4 Günlük Program</button>
+  </div>
+
+  <!-- GROUPS PANE -->
+  <div id="pane-groups" class="pane active">
+    <div class="section-label">
+      <span class="section-label-text">Grup Çekilişi</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">Her gruptan 1 kazanan çeyrek finale geçer</span>
+    </div>
+    <div class="group-grid" id="groupGrid"></div>
+  </div>
+
+  <!-- BRACKET PANE -->
+  <div id="pane-bracket" class="pane">
+    <div class="section-label">
+      <span class="section-label-text">Eleme Turu</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">8 kazanan · Çeyrek → Yarı → Final</span>
+    </div>
+    <div class="bracket-wrap">
+      <div class="bracket" id="bracketEl"></div>
+    </div>
+    <div class="champion-card">
+      <div class="trophy">🏆</div>
+      <div class="champion-label">Şampiyon</div>
+      <div class="champion-name">Final Bekleniyor</div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE PANE -->
+  <div id="pane-schedule" class="pane">
+    <div class="section-label">
+      <span class="section-label-text">4 Günlük Program</span>
+      <div class="section-label-line"></div>
+      <span class="section-label-text">2 masa eş zamanlı</span>
+    </div>
+    <div id="scheduleEl"></div>
+  </div>
+
+  <footer>
+    <div class="footer-ornament">
+      <div style="height:0.5px;width:60px;background:linear-gradient(to right,transparent,var(--gold))"></div>
+      <div style="width:5px;height:5px;background:var(--gold);transform:rotate(45deg)"></div>
+      <div style="height:0.5px;width:60px;background:linear-gradient(to left,transparent,var(--gold))"></div>
+    </div>
+    <p class="footer-text">Bilardo Turnuvası 2026 &nbsp;·&nbsp; İyi oyunlar!</p>
+  </footer>
+</div>
+
+<script>
+const groups = [
+  {id:'A', players:['Özgür Furuncuoğlu','Toprak Yıldırım','Emir Dizman']},
+  {id:'B', players:['Kenan Poçulu','Kağan Ergün Çetin','Batuhan Ünsal']},
+  {id:'C', players:['İsmayıl Hüseynzade','Umut Kağan İşler','Duhan Kaan Şenol']},
+  {id:'D', players:['Burak Efe Özcan','Emre Mete Eröz','Mehmet Ayberk Yağız']},
+  {id:'E', players:['Batuhan','Muhammed Ali YAŞAR','Başar CEYLAN']},
+  {id:'F', players:['Arif Bağtır','Ali Efe Yağmur','Emir Ege GENÇ']},
+  {id:'G', players:['Önder Kaya','İsmail Üstünol','Emir Altunbulak']},
+  {id:'H', players:['Telat Can Poyraz','Çağatay Ulukurd']},
+];
+
+function short(name) {
+  const p = name.split(' ');
+  if(p.length === 1) return name;
+  return p[0] + ' ' + p[p.length-1][0] + '.';
+}
+
+function getMatches(players) {
+  const m = [];
+  for(let i=0;i<players.length;i++)
+    for(let j=i+1;j<players.length;j++)
+      m.push([players[i], players[j]]);
+  return m;
+}
+
+// BUILD GROUPS
+function buildGroups() {
+  const grid = document.getElementById('groupGrid');
+  groups.forEach(g => {
+    const isDuo = g.players.length === 2;
+    const matches = getMatches(g.players);
+    const card = document.createElement('div');
+    card.className = 'group-card';
+    card.innerHTML = `
+      <div class="group-card-head${isDuo?' duo':''}">
+        <div>
+          <div class="group-id">GRUP ${g.id}</div>
+        </div>
+        <div class="group-badge">${isDuo ? '2 oyuncu · 1 maç' : '3 oyuncu · 3 maç'}</div>
+      </div>
+      <div class="group-card-body">
+        <div class="player-list">
+          ${g.players.map((p,i)=>`
+            <div class="player-item">
+              <div class="player-idx">${i+1}</div>
+              <div class="player-name">${p}</div>
+            </div>`).join('')}
+        </div>
+        <div class="matches-area">
+          <div class="matches-title">Maçlar &nbsp;·&nbsp; 3 Set</div>
+          ${matches.map((m,i)=>`
+            <div class="match-item">
+              <span class="match-num">M${i+1}</span>
+              <span class="match-players">
+                <strong>${short(m[0])}</strong>
+                <span class="match-vs">vs</span>
+                <strong>${short(m[1])}</strong>
+              </span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// BUILD BRACKET
+function buildBracket() {
+  const el = document.getElementById('bracketEl');
+  const rounds = [
+    {
+      title: 'Çeyrek Final',
+      sub: '3 Set',
+      matches: groups.map((g,i) => i%2===0 ? ['Grup '+groups[i].id+' 1.si', 'Grup '+groups[i+1]?.id+' 1.si'] : null).filter(Boolean)
+    },
+    {
+      title: 'Yarı Final',
+      sub: '5 Set',
+      matches: [['ÇF Maç 1 Kazananı','ÇF Maç 2 Kazananı'],['ÇF Maç 3 Kazananı','ÇF Maç 4 Kazananı']]
+    },
+    {
+      title: 'Final',
+      sub: '5 Set',
+      matches: [['YF Maç 1 Kazananı','YF Maç 2 Kazananı']]
+    }
+  ];
+
+  rounds.forEach((r,ri) => {
+    const col = document.createElement('div');
+    col.className = 'round-col';
+    col.innerHTML = `<div class="round-head">${r.title}<br><span style="color:var(--text-dim);font-size:8px;letter-spacing:1px">${r.sub}</span></div>`;
+    const matchesDiv = document.createElement('div');
+    matchesDiv.className = 'round-matches';
+    r.matches.forEach((m,mi) => {
+      const isKnown = ri === 0;
+      const block = document.createElement('div');
+      block.className = 'bracket-match';
+      block.innerHTML = `
+        <div class="bracket-slot${isKnown?'':' tbd'}">
+          <span class="slot-seed">${String.fromCharCode(65+mi*2)}</span>
+          ${m[0]}
+        </div>
+        <div class="bracket-slot${isKnown?'':' tbd'}">
+          <span class="slot-seed">${String.fromCharCode(65+mi*2+1)}</span>
+          ${m[1]}
+        </div>`;
+      matchesDiv.appendChild(block);
+    });
+    col.appendChild(matchesDiv);
+    el.appendChild(col);
+  });
+}
+
+// BUILD SCHEDULE
+function buildSchedule() {
+  const el = document.getElementById('scheduleEl');
+  let mn = 1;
+
+  const days = [
+    {
+      num:1, title:'Grup A, B, C, D Maçları', meta:'Grup aşaması — 1. gün · Tahmini süre: ~2.5 saat',
+      items: [
+        ...getMatches(groups[0].players).map(m=>({grp:'Grup A',p1:m[0],p2:m[1],fmt:'3 Set'})),
+        ...getMatches(groups[1].players).map(m=>({grp:'Grup B',p1:m[0],p2:m[1],fmt:'3 Set'})),
+        ...getMatches(groups[2].players).map(m=>({grp:'Grup C',p1:m[0],p2:m[1],fmt:'3 Set'})),
+        ...getMatches(groups[3].players).map(m=>({grp:'Grup D',p1:m[0],p2:m[1],fmt:'3 Set'})),
+      ]
+    },
+    {
+      num:2, title:'Grup E, F, G, H Maçları', meta:'Grup aşaması — 2. gün · Tahmini süre: ~2 saat',
+      items: [
+        ...getMatches(groups[4].players).map(m=>({grp:'Grup E',p1:m[0],p2:m[1],fmt:'3 Set'})),
+        ...getMatches(groups[5].players).map(m=>({grp:'Grup F',p1:m[0],p2:m[1],fmt:'3 Set'})),
+        ...getMatches(groups[6].players).map(m=>({grp:'Grup G',p1:m[0],p2:m[1],fmt:'3 Set'})),
+        ...getMatches(groups[7].players).map(m=>({grp:'Grup H',p1:m[0],p2:m[1],fmt:'3 Set'})),
+      ]
+    },
+    {
+      num:3, title:'Çeyrek Final + Yarı Final', meta:'Eleme turu · Tahmini süre: ~3 saat',
+      items: [
+        {grp:'ÇEY. F.',p1:'Grup A 1.si',p2:'Grup B 1.si',fmt:'3 Set',cls:'semi-match'},
+        {grp:'ÇEY. F.',p1:'Grup C 1.si',p2:'Grup D 1.si',fmt:'3 Set',cls:'semi-match'},
+        {grp:'ÇEY. F.',p1:'Grup E 1.si',p2:'Grup F 1.si',fmt:'3 Set',cls:'semi-match'},
+        {grp:'ÇEY. F.',p1:'Grup G 1.si',p2:'Grup H 1.si',fmt:'3 Set',cls:'semi-match'},
+        {grp:'YARI F.',p1:'ÇF M1 Kazananı',p2:'ÇF M2 Kazananı',fmt:'5 Set',cls:'semi-match'},
+        {grp:'YARI F.',p1:'ÇF M3 Kazananı',p2:'ÇF M4 Kazananı',fmt:'5 Set',cls:'semi-match'},
+      ]
+    },
+    {
+      num:4, title:'Final', meta:'Şampiyonluk maçı · Ödül töreni',
+      items: [
+        {grp:'FİNAL',p1:'YF M1 Kazananı',p2:'YF M2 Kazananı',fmt:'5 Set',cls:'final-match'},
+      ]
+    }
+  ];
+
+  days.forEach(day => {
+    const div = document.createElement('div');
+    div.className = 'schedule-day';
+    let itemsHtml = day.items.map(item => {
+      const num = mn++;
+      return `<div class="sched-match${item.cls?' '+item.cls:''}">
+        <span class="sched-num">#${num}</span>
+        <span class="sched-group">${item.grp}</span>
+        <div class="sched-players">
+          <span>${item.p1}</span>
+          <em>vs</em>
+          <span>${item.p2}</span>
+        </div>
+        <span class="sched-format">${item.fmt}</span>
+      </div>`;
+    }).join('');
+
+    div.innerHTML = `
+      <div class="day-header">
+        <div class="day-badge">${day.num}</div>
+        <div class="day-info">
+          <div class="day-title">${day.title}</div>
+          <div class="day-meta">${day.meta}</div>
+        </div>
+      </div>
+      <div class="schedule-matches">${itemsHtml}</div>`;
+    el.appendChild(div);
+  });
+}
+
+function showTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['groups','bracket','schedule'][i] === name);
+  });
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-'+name).classList.add('active');
+}
+
+buildGroups();
+buildBracket();
+buildSchedule();
+</script>
+</body>
+</html>
