@@ -1,0 +1,221 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: transparent; }
+  .term {
+    background: #0d1117;
+    border-radius: 10px;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    border: 1px solid #30363d;
+  }
+  .titlebar {
+    background: #161b22;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #30363d;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .d-red { background: #ff5f57; }
+  .d-yellow { background: #febc2e; }
+  .d-green { background: #28c840; }
+  .title-text { color: #8b949e; font-size: 12px; margin-left: 8px; }
+  .screen { padding: 20px 24px; min-height: 520px; }
+  .line { color: #c9d1d9; font-size: 13px; line-height: 1.7; white-space: pre; }
+  .cyan    { color: #58d6f5; }
+  .green   { color: #3fb950; }
+  .yellow  { color: #e3b341; }
+  .red     { color: #f85149; }
+  .gray    { color: #8b949e; }
+  .white   { color: #ffffff; }
+  .bold    { font-weight: 700; }
+  .dim     { color: #484f58; }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    margin: 3px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border: 1px solid transparent;
+  }
+  .menu-item:hover { background: #1c2128; border-color: #30363d; }
+  .menu-item.active { background: #1c2128; border-color: #1f6feb; }
+  .menu-num { color: #388bfd; font-weight: 700; width: 20px; flex-shrink: 0; font-size: 13px; }
+  .menu-icon { font-size: 15px; width: 22px; text-align: center; }
+  .menu-label { color: #c9d1d9; font-size: 13px; flex: 1; }
+  .menu-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .badge-blue { background: #1f3a5f; color: #58a6ff; }
+  .badge-red  { background: #3d1a1a; color: #f85149; }
+  .badge-green{ background: #1a3a2a; color: #3fb950; }
+  .badge-yellow{background: #3a2e1a; color: #e3b341; }
+  .badge-purple{background: #2d1f5e; color: #bc8cff; }
+  .badge-cyan { background: #1a2f3a; color: #58d6f5; }
+  .separator { border: none; border-top: 1px solid #21262d; margin: 8px 0; }
+  .subscreen { display: none; }
+  .subscreen.visible { display: block; }
+  .confirm-box {
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    background: #161b22;
+  }
+  .confirm-btns { display: flex; gap: 10px; margin-top: 14px; }
+  .btn {
+    padding: 7px 20px;
+    border-radius: 6px;
+    border: 1px solid;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    transition: opacity 0.15s;
+  }
+  .btn:hover { opacity: 0.8; }
+  .btn-yes { background: #1f6feb; border-color: #388bfd; color: #fff; }
+  .btn-no  { background: #21262d; border-color: #30363d; color: #8b949e; }
+  .btn-back{ background: #21262d; border-color: #30363d; color: #8b949e; }
+  .progress-bar {
+    height: 4px;
+    background: #21262d;
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #1f6feb;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .result-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid #21262d;
+    font-size: 12px;
+  }
+  .risk-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .risk-kritik { background: #3d1a1a; color: #f85149; }
+  .risk-yuksek { background: #3a2a1a; color: #e3b341; }
+  .risk-orta   { background: #1a2a3a; color: #58a6ff; }
+  .risk-bilgi  { background: #1a1a2a; color: #8b949e; }
+</style>
+
+<div class="term">
+  <div class="titlebar">
+    <div class="dot d-red"></div>
+    <div class="dot d-yellow"></div>
+    <div class="dot d-green"></div>
+    <span class="title-text">sentinelai_local.py — bash</span>
+  </div>
+  <div class="screen" id="main-screen">
+
+    <div id="view-splash">
+      <div class="line cyan bold" style="font-size:11px; line-height:1.4">
+ ███████╗███████╗███╗   ██╗████████╗██╗███╗   ██╗███████╗██╗      █████╗ ██╗
+ ██╔════╝██╔════╝████╗  ██║╚══██╔══╝██║████╗  ██║██╔════╝██║     ██╔══██╗██║
+ ███████╗█████╗  ██╔██╗ ██║   ██║   ██║██╔██╗ ██║█████╗  ██║     ███████║██║
+ ╚════██║██╔══╝  ██║╚██╗██║   ██║   ██║██║╚██╗██║██╔══╝  ██║     ██╔══██║██║
+ ███████║███████╗██║ ╚████║   ██║   ██║██║ ╚████║███████╗███████╗██║  ██║██║
+ ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝</div>
+      <div style="margin: 10px 0 4px;">
+        <span class="line gray">  Versiyon: </span><span class="line green">v1.0.0</span>
+        <span class="line gray">  |  Mod: </span><span class="line yellow">Lokal</span>
+        <span class="line gray">  |  Hedef: </span><span class="line white">localhost</span>
+      </div>
+      <div class="line dim">  ──────────────────────────────────────────────────────────────────</div>
+      <div style="margin: 6px 0 2px;" class="line gray">  Yalnızca etik ve egitim amaclidir. Gercek saldiri gerceklestirilmez.</div>
+      <div class="line dim">  ──────────────────────────────────────────────────────────────────</div>
+
+      <div style="margin: 18px 0 10px;" class="line white bold">  Ana Menu</div>
+
+      <div class="menu-item" onclick="goTo('blue')">
+        <span class="menu-num">1</span>
+        <span class="menu-icon">🔵</span>
+        <span class="menu-label">Blue Team Analizi</span>
+        <span class="menu-badge badge-blue">12 kontrol</span>
+      </div>
+      <div class="menu-item" onclick="goTo('red')">
+        <span class="menu-num">2</span>
+        <span class="menu-icon">🔴</span>
+        <span class="menu-label">Red Team Taramasi</span>
+        <span class="menu-badge badge-red">10 tarama</span>
+      </div>
+      <div class="menu-item" onclick="goTo('lynis')">
+        <span class="menu-num">3</span>
+        <span class="menu-icon">🔬</span>
+        <span class="menu-label">Lynis Sistem Denetimi</span>
+        <span class="menu-badge badge-green">otomatik</span>
+      </div>
+      <div class="menu-item" onclick="goTo('full')">
+        <span class="menu-num">4</span>
+        <span class="menu-icon">⚡</span>
+        <span class="menu-label">Tam Analiz (Blue + Red + Lynis)</span>
+        <span class="menu-badge badge-yellow">onerilir</span>
+      </div>
+      <div class="menu-item" onclick="goTo('ai')">
+        <span class="menu-num">5</span>
+        <span class="menu-icon">🤖</span>
+        <span class="menu-label">Claude AI Yorumu</span>
+        <span class="menu-badge badge-purple">API gerekli</span>
+      </div>
+      <div class="menu-item" onclick="goTo('report')">
+        <span class="menu-num">6</span>
+        <span class="menu-icon">📄</span>
+        <span class="menu-label">Rapor Olustur / Görüntüle</span>
+        <span class="menu-badge badge-cyan">MD + JSON</span>
+      </div>
+      <hr class="separator">
+      <div class="menu-item" style="margin-top:2px;">
+        <span class="menu-num gray">0</span>
+        <span class="menu-icon">🚪</span>
+        <span class="menu-label gray">Cikis</span>
+      </div>
+
+      <div style="margin-top: 20px;" class="line dim">  Bir secim yapmak icin numaraya tiklayin.</div>
+    </div>
+
+    <div id="view-blue" class="subscreen">
+      <div class="line cyan bold" style="margin-bottom:14px;">  🔵 Blue Team Analizi</div>
+      <div class="confirm-box">
+        <div class="line gray" style="font-size:12px; margin-bottom:8px;">Asagidaki 12 kontrol calistirilacak:</div>
+        <div class="line white" style="font-size:12px; line-height:2;">
+  🔐 SSH Analizi             🧱 Güvenlik Duvari
+  ⚙️  Aktif Servisler         👤 Kullanici Hesaplari
+  🔧 Cekirdek Parametreleri  📁 Dosya Izinleri
+  📦 Güvenlik Güncellemeleri 📜 Audit Log Olaylari
+  🗂️  Syslog & Log Yönetimi   🚨 Basarisiz Girisler
+  🧬 Rootkit Imza Kontrolü   📡 Kablosuz Ag Güvenligi</div>
+        <div style="margin-top:10px;" class="line yellow" style="font-size:12px;">  ⚠️  Bazi kontroller sudo yetkisi gerektirebilir.</div>
+        <div class="confirm-btns">
+          <button class="btn btn-yes" onclick="runScan('blue')">✓ Evet, baslat</button>
+          <button class="btn btn-no" onclick="goTo('splash')">✕ Iptal</button>
+        </div>
+      </div>
+
+      <div id="blue-progress" style="display:none; margin-top:16px;">
+        <div class="line gray" style="font-size:12px; margin-bottom:6px;" id="blue-status">Hazirlaniyor...</div>
+        <div class="progress-bar"><div class="progress-fill" id="blue-bar"></div></div>
+        <div style="margin-top:14px;" id="blue-results"></div>
+      </div>
+    </div>
